@@ -66,27 +66,6 @@ function Calendar() {
             },
           }}
         />
-
-        <div className="p-4 -mt-5">
-          <p className="font-semibold mb-4">Browse Timezone</p>
-          <TimePicker
-            value={value}
-            onChange={(newValue) => {
-              if (newValue) {
-                setValue((prev) =>
-                  prev.hour(newValue.hour()).minute(newValue.minute()),
-                );
-              }
-            }}
-            minTime={dayjs().hour(5).minute(0)}
-            maxTime={dayjs().hour(22).minute(0)}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-              },
-            }}
-          />
-        </div>
       </LocalizationProvider>
     </div>
   );

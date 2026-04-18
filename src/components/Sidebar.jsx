@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Drawer,
   List,
@@ -19,28 +19,47 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonIcon from "@mui/icons-material/Person";
 import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
-import VillaIcon from '@mui/icons-material/Villa';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import VillaIcon from "@mui/icons-material/Villa";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
-
+import api from "../assets/api";
+import logo from "../assets/images/logo.png";
 const drawerWidth = 240;
 
-function Sidebar({ user }) {
+function Sidebar() {
   const navigate = useNavigate();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState(null);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (!storedUser?.user?.id) return;
+
+    const fetchStudent = async () => {
+      try {
+        const res = await api.get(`/api/profile/${storedUser.user.id}/`);
+        setUser(res.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchStudent();
+  }, []);
+
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "Rooms", icon: <VillaIcon />, path: "/profile" },
+    { text: "Rooms", icon: <VillaIcon />, path: "/rooms" },
     { text: "Profile", icon: <PersonIcon />, path: "/profile" },
-    { text: "Reservation", icon: <AccessTimeIcon />, path: "/settings" },
+
   ];
 
   const drawerContent = (
@@ -80,17 +99,20 @@ function Sidebar({ user }) {
       <Box sx={{ p: 2 }}>
         <Divider sx={{ borderColor: "rgba(255,255,255,0.2)", mb: 2 }} />
 
-        <Box
-          sx={{
-            p: 2,
-            borderRadius: 2,
-            backgroundColor: "rgba(255,255,255,0.1)",
-          }}
-        >
-          <Typography variant="caption" sx={{ opacity: 0.7 }}>
-            ID: {user?.user?.id || "-"}
-          </Typography>
-        </Box>
+        <div className="flex flex-row items-center gap-2">
+          <img
+            src={
+              user?.student?.profile_picture
+                ? `${import.meta.env.VITE_API_URL}${user.student.profile_picture}`
+                : logo
+            }
+            className="w-8 h-8 object-cover rounded-full"
+            alt="profile"
+          />
+          <p className="text-md truncate">
+            {user?.student?.full_name || "Loading..."}
+          </p>
+        </div>
 
         <ListItemButton
           sx={{
@@ -116,7 +138,6 @@ function Sidebar({ user }) {
 
   return (
     <Box sx={{ display: "flex" }}>
-      {/* ✅ Mobile AppBar */}
       {isMobile && (
         <AppBar position="fixed" sx={{ zIndex: 1300 }}>
           <Toolbar>
@@ -135,7 +156,6 @@ function Sidebar({ user }) {
         </AppBar>
       )}
 
-      {/* ✅ Sidebar Drawer */}
       <Box component="nav">
         <Drawer
           variant={isMobile ? "temporary" : "permanent"}
@@ -158,7 +178,6 @@ function Sidebar({ user }) {
         </Drawer>
       </Box>
 
-      {/* ✅ FIX: pushes content below AppBar on mobile */}
       <Box
         component="main"
         sx={{
@@ -166,9 +185,7 @@ function Sidebar({ user }) {
           p: 2,
           mt: isMobile ? "64px" : 0,
         }}
-      >
-        {/* Your page content will go here if you wrap layout */}
-      </Box>
+      />
     </Box>
   );
 }

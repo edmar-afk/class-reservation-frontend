@@ -186,10 +186,10 @@ function Register() {
                     className="bg-slate-100 w-full px-4 py-3 rounded-md border border-gray-200"
                   >
                     <option value="">Year</option>
-                    <option value="1st Year">1st</option>
-                    <option value="2nd Year">2nd</option>
-                    <option value="3rd Year">3rd</option>
-                    <option value="4th Year">4th</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
                   </select>
                 </div>
                 <div className="w-full">

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../assets/api";
+import Swal from "sweetalert2";
 
 function Login() {
   const navigate = useNavigate();
@@ -33,10 +34,23 @@ function Login() {
 
       localStorage.setItem("user", JSON.stringify(data));
 
+      await Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "Welcome back!",
+        confirmButtonColor: "#2563eb",
+      });
+
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert("Invalid phone number or password");
+
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: "Incorrect phone number or password",
+        confirmButtonColor: "#dc2626",
+      });
     } finally {
       setLoading(false);
     }
