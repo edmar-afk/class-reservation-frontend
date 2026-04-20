@@ -171,9 +171,9 @@ function Register() {
                     className="bg-slate-100 w-full px-4 py-3 rounded-md border border-gray-200"
                   >
                     <option value="">Course</option>
-                    <option value="BSIT">BSIT</option>
-                    <option value="BSED">BSED</option>
-                    <option value="BSBA">BSBA</option>
+                    <option value="BTVTED">BTVTED</option>
+                    <option value="BSIS">BSIS</option>
+                    <option value="ACT">ACT</option>
                   </select>
                 </div>
                 <div className="w-full">
