@@ -15,7 +15,7 @@ const style = {
   padding: "5px",
 };
 
-function BookRoomModal() {
+function BookRoomModal({ fullName, userId }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,8 +30,17 @@ function BookRoomModal() {
       </button>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box sx={style}>
-          <button onClick={() => setOpen(false)} className="cursor-pointer hover:scale-110 duration-300 absolute bottom-3 left-3 bg-red-500 rounded-lg p-2.5 py-1 text-white font-bold">Close</button>
-          <BookRoomForm onClose={() => setOpen(false)} />
+          <button
+            onClick={() => setOpen(false)}
+            className="cursor-pointer hover:scale-110 duration-300 absolute bottom-3 left-3 bg-red-500 rounded-lg p-2.5 py-1 text-white font-bold"
+          >
+            Close
+          </button>
+          <BookRoomForm
+            fullName={fullName}
+            userId={userId}
+            onClose={() => setOpen(false)}
+          />
         </Box>
       </Modal>
     </div>

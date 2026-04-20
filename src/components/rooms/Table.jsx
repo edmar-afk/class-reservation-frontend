@@ -3,7 +3,7 @@ import api from "../../assets/api";
 import BookRoomModal from "./BookRoomModal";
 import Swal from "sweetalert2";
 
-function Table({ fullName }) {
+function Table({ fullName, userId }) {
   const [reservations, setReservations] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -97,7 +97,7 @@ function Table({ fullName }) {
             />
           </div>
 
-          <BookRoomModal />
+          <BookRoomModal fullName={fullName} userId={userId} />
         </div>
 
         <p className="mb-4 w-full sm:w-[60%]">

@@ -17,30 +17,36 @@ function RoomCards({ course, year_lvl, section, selectedDate }) {
         `/api/reservations/${course}/${year_lvl}/${section}/`,
       );
 
-      if (res.data.length > 0) {
-        const selected = new Date(selectedDate);
+      const selected = new Date(selectedDate);
+      selected.setHours(0, 0, 0, 0);
 
-        const filtered = res.data.find((item) => {
-          const reserveDate = new Date(item.time_in);
+      const filtered = res.data.find((item) => {
+        const start = new Date(item.time_in.replace(" ", "T"));
+        const end = new Date(item.time_out.replace(" ", "T"));
 
-          return (
-            reserveDate.getFullYear() === selected.getFullYear() &&
-            reserveDate.getMonth() === selected.getMonth() &&
-            reserveDate.getDate() === selected.getDate()
-          );
-        });
+        const startDate = new Date(start);
+        startDate.setHours(0, 0, 0, 0);
 
-        setReservation(filtered || null);
-      } else {
-        setReservation(null);
-      }
+        const endDate = new Date(end);
+        endDate.setHours(0, 0, 0, 0);
+
+        const isSameDay = startDate.getTime() === selected.getTime();
+
+        const now = new Date();
+
+        const notExpired = end >= now;
+
+        return isSameDay && notExpired;
+      });
+
+      setReservation(filtered || null);
     } catch (error) {
       setReservation(null);
     }
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(dateString.replace(" ", "T")).toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
       year: "numeric",
@@ -48,7 +54,7 @@ function RoomCards({ course, year_lvl, section, selectedDate }) {
   };
 
   const formatTime = (dateString) => {
-    return new Date(dateString)
+    return new Date(dateString.replace(" ", "T"))
       .toLocaleTimeString("en-US", {
         hour: "numeric",
         minute: "2-digit",
@@ -91,7 +97,7 @@ function RoomCards({ course, year_lvl, section, selectedDate }) {
           <b>{formatTime(reservation.time_out)}</b>
         </p>
 
-        <div className="flex flex-row item-center">
+        <div className="flex flex-row items-center">
           <PersonPinIcon sx={{ fontSize: 44 }} className="text-white mr-2" />
 
           <div>

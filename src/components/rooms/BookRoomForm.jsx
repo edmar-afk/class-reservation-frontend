@@ -7,7 +7,10 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import api from "../../assets/api";
 import RoomLists from "./RoomLists";
+
 function BookRoomForm({ onClose }) {
+  const [data, setData] = useState(null);
+
   const [date, setDate] = useState(dayjs());
   const [timeIn, setTimeIn] = useState(dayjs());
   const [timeOut, setTimeOut] = useState(dayjs());
@@ -19,7 +22,36 @@ function BookRoomForm({ onClose }) {
   const [section, setSection] = useState("");
   const [loading, setLoading] = useState(false);
   const [reservations, setReservations] = useState([]);
+
   const isPastDate = date.startOf("day").isBefore(dayjs().startOf("day"));
+
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+
+    if (!stored) return;
+
+    const parsed = JSON.parse(stored);
+
+    const userId = parsed?.user?.id;
+
+    if (!userId) return;
+
+    const fetchProfile = async () => {
+      try {
+        const res = await api.get(`/api/profile/${userId}/`);
+        setData(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProfile();
+    fetchRooms();
+    fetchReservations();
+  }, []);
+
+  const userId = data?.user?.id;
+  const fullName = data?.student?.full_name;
 
   const hasTimeConflict = reservations.some((item) => {
     const sameRoom = item.room.id === Number(selectedRoom);
@@ -50,6 +82,15 @@ function BookRoomForm({ onClose }) {
     }
   };
 
+  const fetchRooms = async () => {
+    try {
+      const res = await api.get("/api/rooms/");
+      setRooms(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const isFormInvalid =
     !selectedRoom ||
     !course ||
@@ -60,45 +101,36 @@ function BookRoomForm({ onClose }) {
     isPastDate ||
     hasTimeConflict;
 
-  useEffect(() => {
-    fetchRooms();
-    fetchReservations();
-  }, []);
-
-  const fetchRooms = async () => {
-    try {
-      const res = await api.get("/api/rooms/");
-      setRooms(res.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const handleSubmit = async () => {
     if (isFormInvalid) return;
 
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-
-    if (!storedUser?.user?.id) {
-      Swal.fire("Error", "User not found in localStorage", "error");
+    if (!userId) {
+      Swal.fire("Error", "User not found", "error");
       return;
     }
 
     setLoading(true);
 
     try {
-      await api.post(
-        `/api/student-reserve/${storedUser.user.id}/${selectedRoom}/`,
-        {
-          course,
-          year_lvl: yearLvl,
-          subject,
-          section,
-          reserve_date: date.format("YYYY-MM-DD"),
-          time_in: timeIn.toISOString(),
-          time_out: timeOut.toISOString(),
-        },
-      );
+      const timeInFinal = date
+        .hour(timeIn.hour())
+        .minute(timeIn.minute())
+        .second(0);
+
+      const timeOutFinal = date
+        .hour(timeOut.hour())
+        .minute(timeOut.minute())
+        .second(0);
+
+      await api.post(`/api/student-reserve/${userId}/${selectedRoom}/`, {
+        course,
+        year_lvl: yearLvl,
+        subject,
+        section,
+        reserve_date: date.format("YYYY-MM-DD"),
+        time_in: timeInFinal.format("YYYY-MM-DD HH:mm:ss"),
+        time_out: timeOutFinal.format("YYYY-MM-DD HH:mm:ss"),
+      });
 
       onClose();
 
@@ -114,14 +146,15 @@ function BookRoomForm({ onClose }) {
       Swal.fire("Success", "Schedule has been set successfully", "success");
     } catch (error) {
       console.error(error);
-
       onClose();
-
       Swal.fire("Error", "Failed to set schedule", "error");
     } finally {
       setLoading(false);
     }
   };
+
+  console.log("Full Name in BookRoomForm:", fullName);
+  console.log("User ID in BookRoomForm:", userId);
 
   return (
     <div>
@@ -203,8 +236,7 @@ function BookRoomForm({ onClose }) {
           </div>
           {isPastDate && (
             <p className="text-sm text-red-500 mt-2 mb-4 font-bold">
-              Please select a valid upcoming date. Past dates are not
-              allowed.
+              Please select a valid upcoming date. Past dates are not allowed.
             </p>
           )}
 
