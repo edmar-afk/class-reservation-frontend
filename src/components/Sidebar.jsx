@@ -17,13 +17,13 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PersonIcon from "@mui/icons-material/Person";
-import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import VillaIcon from "@mui/icons-material/Villa";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useNavigate } from "react-router-dom";
 import api from "../assets/api";
 import logo from "../assets/images/logo.png";
+import ProfileModal from "./ProfileModal";
+
 const drawerWidth = 240;
 
 function Sidebar() {
@@ -33,6 +33,7 @@ function Sidebar() {
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -40,7 +41,6 @@ function Sidebar() {
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
-
     if (!storedUser?.user?.id) return;
 
     const fetchStudent = async () => {
@@ -58,8 +58,7 @@ function Sidebar() {
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
     { text: "Rooms", icon: <VillaIcon />, path: "/rooms" },
-    { text: "Profile", icon: <PersonIcon />, path: "/profile" },
-
+    { text: "Profile", icon: <PersonIcon /> },
   ];
 
   const drawerContent = (
@@ -77,7 +76,11 @@ function Sidebar() {
           <ListItemButton
             key={index}
             onClick={() => {
-              navigate(item.path);
+              if (item.text === "Profile") {
+                setProfileOpen(true);
+              } else {
+                navigate(item.path);
+              }
               if (isMobile) setMobileOpen(false);
             }}
             sx={{
@@ -161,9 +164,7 @@ function Sidebar() {
           variant={isMobile ? "temporary" : "permanent"}
           open={isMobile ? mobileOpen : true}
           onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
+          ModalProps={{ keepMounted: true }}
           sx={{
             "& .MuiDrawer-paper": {
               width: drawerWidth,
@@ -178,13 +179,15 @@ function Sidebar() {
         </Drawer>
       </Box>
 
+      <ProfileModal
+        open={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        user={user}
+      />
+
       <Box
         component="main"
-        sx={{
-          flexGrow: 1,
-          p: 2,
-          mt: isMobile ? "64px" : 0,
-        }}
+        sx={{ flexGrow: 1, p: 2, mt: isMobile ? "64px" : 0 }}
       />
     </Box>
   );
