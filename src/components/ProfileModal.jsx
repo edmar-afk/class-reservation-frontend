@@ -9,6 +9,8 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 function ProfileModal({ open, onClose, user }) {
+  console.log("User in ProfileModal:", user);
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
@@ -34,21 +36,21 @@ function ProfileModal({ open, onClose, user }) {
               <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Full name</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {user?.student?.full_name || "N/A"}
+                  {user?.student?.full_name || "Instructor"}
                 </dd>
               </div>
 
               <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Course</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {user?.student?.course || "N/A"}
+                  {user?.student?.course || "Instructor"}
                 </dd>
               </div>
 
               <div className="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Section</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {user?.student?.section || "N/A"}
+                  {user?.student?.section || "Instructor"}
                 </dd>
               </div>
 
@@ -57,7 +59,7 @@ function ProfileModal({ open, onClose, user }) {
                   Year Level
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {user?.student?.year_lvl || "N/A"}
+                  {user?.student?.year_lvl || "Instructor"}
                 </dd>
               </div>
 
@@ -66,7 +68,7 @@ function ProfileModal({ open, onClose, user }) {
                   Phone number
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {user?.student?.phone_number || "N/A"}
+                  {user?.student?.phone_number || "Instructor"}
                 </dd>
               </div>
             </dl>

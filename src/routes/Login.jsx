@@ -61,7 +61,7 @@ function Login() {
       <div className="lg:min-h-screen flex flex-col items-center justify-center p-6">
         <div className="grid lg:grid-cols-2 items-center gap-10 max-w-6xl max-lg:max-w-lg w-full">
           <div>
-            <p className="text-lg font-semibold text-gray-400">SmartSpace</p>
+            <p className="text-lg font-semibold text-gray-400">________</p>
             <h1 className="lg:text-5xl text-4xl font-bold text-slate-900 !leading-tight">
               ZDSPGC Room Scheduling
             </h1>

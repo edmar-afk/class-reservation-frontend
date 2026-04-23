@@ -43,7 +43,7 @@ function Sidebar() {
     const storedUser = JSON.parse(localStorage.getItem("user"));
     if (!storedUser?.user?.id) return;
 
-    const fetchStudent = async () => {
+    const fetchProfile = async () => {
       try {
         const res = await api.get(`/api/profile/${storedUser.user.id}/`);
         setUser(res.data);
@@ -52,15 +52,25 @@ function Sidebar() {
       }
     };
 
-    fetchStudent();
+    fetchProfile();
   }, []);
+
+  const isSuperUser = user?.user?.is_superuser === true || user?.user?.is_superuser === "true";
 
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "Rooms", icon: <VillaIcon />, path: "/rooms" },
-    { text: "Profile", icon: <PersonIcon /> },
-  ];
 
+    isSuperUser && {
+      text: "Rooms",
+      icon: <VillaIcon />,
+      path: "/rooms",
+    },
+
+    { text: "Profile", icon: <PersonIcon /> },
+  ].filter(Boolean);
+
+  console.log("User in Sidebar:", user);
+  console.log("is_superuser in Sidebar:", user?.user?.is_superuser);
   const drawerContent = (
     <>
       <Box sx={{ p: 3 }}>
@@ -81,6 +91,7 @@ function Sidebar() {
               } else {
                 navigate(item.path);
               }
+
               if (isMobile) setMobileOpen(false);
             }}
             sx={{
@@ -94,6 +105,7 @@ function Sidebar() {
             }}
           >
             <ListItemIcon sx={{ color: "#fff" }}>{item.icon}</ListItemIcon>
+
             <ListItemText primary={item.text} />
           </ListItemButton>
         ))}
@@ -112,6 +124,7 @@ function Sidebar() {
             className="w-8 h-8 object-cover rounded-full"
             alt="profile"
           />
+
           <p className="text-md truncate">
             {user?.student?.full_name || "Loading..."}
           </p>
@@ -133,6 +146,7 @@ function Sidebar() {
           <ListItemIcon sx={{ color: "#fff" }}>
             <LogoutIcon />
           </ListItemIcon>
+
           <ListItemText primary="Logout" />
         </ListItemButton>
       </Box>
