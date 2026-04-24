@@ -233,54 +233,73 @@ function Register() {
                 className="w-full"
               />
 
-              <div className="flex gap-4">
-                <div className="relative w-full">
-                  <input
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    onChange={handleChange}
-                    placeholder="Password"
-                    className={`bg-slate-100 w-full px-4 py-3 pr-12 rounded-md border ${
-                      !isPasswordValid && form.password
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    }`}
-                  />
+              <div className="flex flex-col gap-2">
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Password
+                </label>
+                <div className="flex gap-4">
+                  <div className="relative w-full">
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      onChange={handleChange}
+                      placeholder="Password"
+                      className={`bg-slate-100 w-full px-4 py-3 pr-12 rounded-md border ${
+                        !isPasswordValid && form.password
+                          ? "border-red-500"
+                          : "border-gray-200"
+                      }`}
+                    />
 
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                  >
-                    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    >
+                      {showPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="relative w-full">
+                    <input
+                      name="repeat_password"
+                      type={showRepeatPassword ? "text" : "password"}
+                      onChange={handleChange}
+                      placeholder="Repeat Password"
+                      className={`bg-slate-100 w-full px-4 py-3 pr-12 rounded-md border ${
+                        form.repeat_password && !isPasswordMatch
+                          ? "border-red-500"
+                          : "border-gray-200"
+                      }`}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                    >
+                      {showRepeatPassword ? (
+                        <VisibilityOffIcon />
+                      ) : (
+                        <VisibilityIcon />
+                      )}
+                    </button>
+                  </div>
                 </div>
 
-                <div className="relative w-full">
-                  <input
-                    name="repeat_password"
-                    type={showRepeatPassword ? "text" : "password"}
-                    onChange={handleChange}
-                    placeholder="Repeat Password"
-                    className={`bg-slate-100 w-full px-4 py-3 pr-12 rounded-md border ${
-                      form.repeat_password && !isPasswordMatch
-                        ? "border-red-500"
-                        : "border-gray-200"
-                    }`}
-                  />
+                {!isPasswordValid && form.password && (
+                  <p className="text-red-500 text-sm">
+                    Must be minimum of 5 characters
+                  </p>
+                )}
 
-                  <button
-                    type="button"
-                    onClick={() => setShowRepeatPassword(!showRepeatPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-                  >
-                    {showRepeatPassword ? (
-                      <VisibilityOffIcon />
-                    ) : (
-                      <VisibilityIcon />
-                    )}
-                  </button>
-                </div>
+                {form.repeat_password && !isPasswordMatch && (
+                  <p className="text-red-500 text-sm">Passwords do not match</p>
+                )}
               </div>
             </div>
 
