@@ -4,6 +4,8 @@ import api from "../assets/api";
 import Swal from "sweetalert2";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function Register() {
   const navigate = useNavigate();
@@ -20,7 +22,8 @@ function Register() {
   });
 
   const [loading, setLoading] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
@@ -272,25 +275,54 @@ function Register() {
               </div>
             </div>
 
-            <div className="mt-12">
-              <button
-                type="submit"
-                disabled={!isFormValid || loading}
-                className={`w-full py-2.5 px-4 rounded-md cursor-pointer text-white flex items-center justify-center gap-2 ${
-                  isFormValid && !loading
-                    ? "bg-blue-600 hover:bg-blue-700"
-                    : "bg-red-500 cursor-not-allowed"
-                }`}
-              >
-                {loading ? (
-                  <>
-                    <CircularProgress size={20} />
-                    Registering, Please wait...
-                  </>
-                ) : (
-                  "Register"
-                )}
-              </button>
+            <div className="flex gap-4">
+              <div className="relative w-full">
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  className={`bg-slate-100 w-full px-4 py-3 pr-12 rounded-md border ${
+                    !isPasswordValid && form.password
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  }`}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </button>
+              </div>
+
+              <div className="relative w-full">
+                <input
+                  name="repeat_password"
+                  type={showRepeatPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  placeholder="Repeat Password"
+                  className={`bg-slate-100 w-full px-4 py-3 pr-12 rounded-md border ${
+                    form.repeat_password && !isPasswordMatch
+                      ? "border-red-500"
+                      : "border-gray-200"
+                  }`}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showRepeatPassword ? (
+                    <VisibilityOffIcon />
+                  ) : (
+                    <VisibilityIcon />
+                  )}
+                </button>
+              </div>
             </div>
           </form>
         </div>
