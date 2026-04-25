@@ -56,21 +56,25 @@ function BookRoomForm({ onClose }) {
   const hasTimeConflict = reservations.some((item) => {
     const sameRoom = item.room.id === Number(selectedRoom);
 
-    const sameDate =
-      dayjs(item.reserve_date).format("YYYY-MM-DD") ===
-      date.format("YYYY-MM-DD");
+    const sameDate = item.reserve_date === date.format("YYYY-MM-DD");
 
     if (!sameRoom || !sameDate) return false;
 
-    const existingTimeIn = dayjs(item.time_in);
-    const existingTimeOut = dayjs(item.time_out);
+    const existingStart = dayjs(item.time_in);
+    const existingEnd = dayjs(item.time_out);
 
-    const userStart = dayjs(timeIn);
-    const userEnd = dayjs(timeOut);
-
-    return (
-      userStart.isBefore(existingTimeOut) && userEnd.isAfter(existingTimeIn)
+    const userStart = dayjs(
+      `${date.format("YYYY-MM-DD")} ${timeIn.format("HH:mm:ss")}`,
     );
+
+    const userEnd = dayjs(
+      `${date.format("YYYY-MM-DD")} ${timeOut.format("HH:mm:ss")}`,
+    );
+
+    const overlaps =
+      userStart.isBefore(existingEnd) && userEnd.isAfter(existingStart);
+
+    return overlaps;
   });
 
   const fetchReservations = async () => {
