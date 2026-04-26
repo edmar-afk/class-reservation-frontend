@@ -15,7 +15,7 @@ function Register() {
     course: "",
     section: "",
     year_lvl: "",
-    phone_number: "",
+    username: "",
     password: "",
     repeat_password: "",
     profile_picture: null,
@@ -29,17 +29,6 @@ function Register() {
 
     if (files) {
       setForm({ ...form, [name]: files[0] });
-      return;
-    }
-
-    if (name === "phone_number") {
-      let cleaned = value.replace(/\D/g, "");
-
-      if (!cleaned.startsWith("09")) {
-        cleaned = "09" + cleaned;
-      }
-
-      setForm({ ...form, phone_number: cleaned });
       return;
     }
 
@@ -58,7 +47,7 @@ function Register() {
     form.course &&
     form.section &&
     form.year_lvl &&
-    form.phone_number &&
+    form.username &&
     form.password &&
     form.repeat_password &&
     isPasswordMatch &&
@@ -71,13 +60,12 @@ function Register() {
 
     const formData = new FormData();
 
-    formData.append("username", form.phone_number);
+    formData.append("username", form.username);
     formData.append("full_name", form.full_name);
     formData.append("password", form.password);
     formData.append("course", form.course);
     formData.append("section", form.section);
     formData.append("year_lvl", form.year_lvl);
-    formData.append("phone_number", form.phone_number);
 
     if (form.profile_picture) {
       formData.append("profile_picture", form.profile_picture);
@@ -213,14 +201,15 @@ function Register() {
               </div>
 
               <label className="block text-sm font-medium text-gray-600 mb-1">
-                Phone Number
+                Username
               </label>
+
               <input
-                name="phone_number"
-                value={form.phone_number}
+                name="username"
+                value={form.username}
                 onChange={handleChange}
                 className="bg-slate-100 w-full px-4 py-3 rounded-md border border-gray-200"
-                placeholder="Phone Number"
+                placeholder="Username"
               />
 
               <label className="block text-sm font-medium text-gray-600 mb-1">

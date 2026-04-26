@@ -7,7 +7,7 @@ function Login() {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    number: "",
+    username: "",
     password: "",
   });
 
@@ -26,7 +26,7 @@ function Login() {
 
     try {
       const res = await api.post("/api/login/", {
-        username: form.number,
+        username: form.username,
         password: form.password,
       });
 
@@ -34,21 +34,32 @@ function Login() {
 
       localStorage.setItem("user", JSON.stringify(data));
 
-      await Swal.fire({
-        icon: "success",
-        title: "Login Successful",
-        text: "Welcome back!",
-        confirmButtonColor: "#2563eb",
-      });
+      if (data.user.is_staff === true || data.user.is_superuser === true) {
+        await Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Welcome back!",
+          confirmButtonColor: "#2563eb",
+        });
 
-      navigate("/dashboard");
+        navigate("/dashboard");
+      } else {
+        await Swal.fire({
+          icon: "warning",
+          title: "Account Pending",
+          text: "You need to wait for admin's approval to access the system",
+          confirmButtonColor: "#f59e0b",
+        });
+
+        return;
+      }
     } catch (err) {
       console.error(err);
 
       Swal.fire({
         icon: "error",
         title: "Login Failed",
-        text: "Incorrect phone number or password",
+        text: "Incorrect username or password",
         confirmButtonColor: "#dc2626",
       });
     } finally {
@@ -88,16 +99,16 @@ function Login() {
             <div className="space-y-6">
               <div>
                 <label className="text-sm text-slate-900 font-medium mb-2 block">
-                  Phone Number
+                  Username
                 </label>
                 <input
-                  name="number"
+                  name="username"
                   type="text"
-                  value={form.number}
+                  value={form.username}
                   onChange={handleChange}
                   required
                   className="bg-slate-100 w-full text-sm text-slate-900 px-4 py-3 rounded-md outline-0 border border-gray-200 focus:border-blue-600 focus:bg-transparent"
-                  placeholder="Enter Phone Number"
+                  placeholder="Enter Username"
                 />
               </div>
 
