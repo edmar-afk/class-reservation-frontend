@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../assets/api";
 import Swal from "sweetalert2";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function Login() {
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     username: "",
     password: "",
@@ -112,19 +114,28 @@ function Login() {
                 />
               </div>
 
-              <div>
-                <label className="text-sm text-slate-900 font-medium mb-2 block">
-                  Password
-                </label>
+              <div className="relative">
                 <input
                   name="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={form.password}
                   onChange={handleChange}
                   required
-                  className="bg-slate-100 w-full text-sm text-slate-900 px-4 py-3 rounded-md outline-0 border border-gray-200 focus:border-blue-600 focus:bg-transparent"
+                  className="bg-slate-100 w-full text-sm text-slate-900 px-4 py-3 pr-12 rounded-md outline-0 border border-gray-200"
                   placeholder="Enter Password"
                 />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+                >
+                  {showPassword ? (
+                    <VisibilityOffIcon fontSize="small" />
+                  ) : (
+                    <VisibilityIcon fontSize="small" />
+                  )}
+                </button>
               </div>
             </div>
 
